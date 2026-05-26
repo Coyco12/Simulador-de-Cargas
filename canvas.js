@@ -1,15 +1,39 @@
-let cuadro1 = document.getElementById("valorcarga");
-let dim= document.getElementById("dimension");
-let canvas=document.getElementById("canvas");
-let figura=canvas.getContext("2d");
-let container= canvas.parentNode;
-let switch_click="crear";
+let carga0= 'La carga necesita un valor diferente a 0';
+let dimension0= 'Selecciona una dimensión para colocar las cargas';
 
-var windowWidth=window.innerWidth;
-var windowHeight=window.innerHeight;
-canvas.width=container.clientWidth-20;
-canvas.height=container.clientHeight-20;
+let cuadro1, dim, canvas, figura, container;
+let switch_click = "crear";
+var allcargas = [];
 
+
+function inicializarYReseize() {
+    
+    cuadro1 = document.getElementById("valorcarga");
+    dim = document.getElementById("dimension");
+    canvas = document.getElementById("canvas");
+    container = canvas.parentNode;
+    figura = canvas.getContext("2d");
+
+    if (canvas) {
+        
+        let rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        
+        
+        if (allcargas.length > 0) {
+            for (let i = 0; i < allcargas.length; i++) {
+                allcargas[i].draw();
+            }
+        }
+    }
+}
+
+
+window.addEventListener("DOMContentLoaded", inicializarYReseize);
+
+
+window.addEventListener("resize", inicializarYReseize);
 
 class carga{
     constructor(x,y,radio,valor){
@@ -64,10 +88,12 @@ class carga{
     }
 }
 
-dim.addEventListener("change", cambiodim)
+
+
 function cambiodim(event){
     if(dim.value=="1D"||dim.value=="2D"||dim.value=="general"){
-    limpiar();
+        limpiar();
+        switch_click = "crear"; 
     }
 
 }
@@ -78,14 +104,11 @@ function click_switch(event){
         createCharge(event);
 }
 
-canvas.addEventListener("click", click_switch); 
-var allcargas = [];
-
 function createCharge(event) {   
     let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-   
+    
     if(dim.value=="1D"){
         y=canvas.height/2;
     }
@@ -94,21 +117,37 @@ function createCharge(event) {
         return;
     }    
     let coulomb=Number(cuadro1.value);
-     if(coulomb==0){
+    if(coulomb==0){
         notificacion(carga0);
         return;
     }  
     let newCharge = new carga(x, y, 25, coulomb);
     newCharge.draw();
     allcargas.push(newCharge);
-   
+    
 }
 
 function borrar(event){
-     let recto = canvas.getBoundingClientRect();
-    let x_borrar = event.clientX - recto.left-30;
-    let y_borrar = event.clientY - recto.top-30;
-    figura.clearRect(x_borrar, y_borrar, 60, 60);
+    let rect = canvas.getBoundingClientRect();
+    let x_clic = event.clientX - rect.left;
+    let y_clic = event.clientY - rect.top;
+
+    for (let i = 0; i < allcargas.length; i++) {
+        let cargaActual = allcargas[i];
+
+        let distanciaX = x_clic - cargaActual.x;
+        let distanciaY = y_clic - cargaActual.y;
+        let distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+
+        if (distancia <= cargaActual.radio) {
+            allcargas.splice(i, 1); 
+            figura.clearRect(0, 0, canvas.width, canvas.height);
+            for (let j = 0; j < allcargas.length; j++) {
+                allcargas[j].draw();
+            }
+            break; 
+        }
+    }
 }
 
 function limpiar(){
@@ -116,16 +155,53 @@ function limpiar(){
     allcargas = [];
 }
 
-let carga0= 'La carga necesita un valor diferente a 0';
-let dimension0= 'Selecciona una dimensión para colocar las cargas';
-
 function notificacion(texto){
-    let noti= document.createElement('div');
+    let contenedorNoti = document.getElementById("notificacion");
+    
+    if (!contenedorNoti) {
+        console.error("No se encontró el contenedor <div id='notificacion'> en el HTML");
+        return;
+    }
+
+    let noti = document.createElement('div');
     noti.classList.add("noti");
-    noti.innerHTML=texto;
-    document.getElementById("notificacion").appendChild(noti);
+    noti.innerHTML = texto;
+    
+    contenedorNoti.appendChild(noti);
 
     setTimeout(() => {
-        noti.remove();
+        if (noti && noti.parentNode) {
+            noti.remove();
+        }
     }, 3000);
 }
+
+function inicializarYReseize() {
+
+    cuadro1 = document.getElementById("valorcarga");
+    dim = document.getElementById("dimension");
+    canvas = document.getElementById("canvas");
+    container = canvas.parentNode;
+    figura = canvas.getContext("2d");
+
+    if (canvas && dim) {
+        let rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        canvas.removeEventListener("click", click_switch); 
+        canvas.addEventListener("click", click_switch); 
+        
+        dim.removeEventListener("change", cambiodim);
+        dim.addEventListener("change", cambiodim);
+
+        if (allcargas.length > 0) {
+            for (let i = 0; i < allcargas.length; i++) {
+                allcargas[i].draw();
+            }
+        }
+    }
+}
+
+window.addEventListener("DOMContentLoaded", inicializarYReseize);
+window.addEventListener("resize", inicializarYReseize);
