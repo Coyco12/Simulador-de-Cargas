@@ -6,21 +6,36 @@
         <title>Simulador-de-cargas</title>
         <link rel="stylesheet" href="style.css">
     </head>
+    
     <body>
-        <div class="canvas-container">
-            <canvas id="canvas"></canvas>
-            <script src="canvas.js"></script>
-        </div>
-        <div class="input-container">
-            <div>
-                <label for="valorcarga">Valor de la carga:</label>
-                <br>
-                <input type="number" id="valorcarga" name="valorcarga">
+        <h1> Simulador de Cargas </h1>
+        <div class="content">
+            <div class="canvas-container">
+                <canvas id="canvas"></canvas>
+             
             </div>
-            <div>
-                <input type="">
+            <div class="input-container">
+                <div class="select-container">  
+                    <label for="dimension">Dimensión:</label>
+                    <br>
+                    <select id="dimension" class="select-box">
+                        <option value="general">Selecciona la dimensión</option>
+                        <option value="1D">1D</option>
+                        <option value="2D">2D</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="valorcarga">Valor de la carga:</label>
+                    <br>
+                    <input type="number" id="valorcarga" placeholder="Valor de la carga">
+                </div>
+                <div>
+                    <button type="button" id="limpiar" onclick="limpiar()">Limpiar espacio</button>
+                </div>
             </div>
         </div>
+        <div id="notificacion"></div>
+           <script src="canvas.js"></script>
     </body>
     
 </html>
