@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Simulador-de-cargas</title>
         <link rel="stylesheet" href="style.css">
-        <script src="canvas.js"></script>
     </head>
     
     <body>
@@ -28,18 +27,23 @@
                 <div>
                     <label for="valorcarga">Valor de la carga:</label>
                     <br>
-                    <input type="number" id="valorcarga" placeholder="Valor de la carga" onfocus="switch_click='crear'">
+                    <input type="number" id="valorcarga" placeholder="Valor de la carga">
+                    <select id="prefix">
+                        <option value="coulomb">Coulomb</option>
+                        <option value="milicoulomb">mC</option>
+                        <option value="microcoulomb">μC</option>
+                        <option value="nanocoulomb">nC</option>
+                    </select>
                 </div>
                 <div>
                     <button type="button" id="limpiar" onclick="limpiar()">Limpiar espacio</button>
                 </div>
                 <div>
-                    <button class="eliminar" type="button" id="borrar" onclick="switch_click='borrar'">Borrar carga</button>
+                    <button type="button" id="borrar">Borrar carga</button>
                 </div>  
             </div>
             
         </div>
-            
+        <script src="canvas.js"></script> 
     </body>
-    
 </html>

@@ -54,7 +54,7 @@ select option:checked{
 }
 
 input[type="number"]{
-    width: 200px;
+    width: clamp(130px, 175px, 200px);
     height: 30px;
     text-align: center;
     font-family: 'Elms Sans';
@@ -62,7 +62,6 @@ input[type="number"]{
     font-weight: bold;
     border-radius: 5px;
     background-color: rgb(167, 228, 231);
-    
 }
 
 
@@ -73,21 +72,22 @@ button{
     font-family: 'Elms Sans';
     font-size: 18px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button:hover{
     background-color: rgb(255, 195, 157);
-    transition: background-color 0.3s ease;
 }
+
 button:active{
     background-color: rgb(242, 45, 45);
     transform: scale(0.95);
-    transition: background-color 0.1s ease, transform 0.1s ease;
+}
+button.borrando{
+    background-color: rgb(255, 45, 45);
+    color: white;
 }
 
-button.eliminar{
-
-}
 
 .content {
     border: 5px solid black;
