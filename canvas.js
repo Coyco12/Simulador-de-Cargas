@@ -3,6 +3,7 @@ let dim= document.getElementById("dimension");
 let canvas=document.getElementById("canvas");
 let figura=canvas.getContext("2d");
 let container= canvas.parentNode;
+let switch_click="crear";
 
 var windowWidth=window.innerWidth;
 var windowHeight=window.innerHeight;
@@ -30,7 +31,13 @@ class carga{
         if(this.y>canvas.height-this.radio){
             this.y=canvas.height-this.radio;
         }
-        
+        /*
+        for(each of allcargas){
+            if(each!=this&&this.x+this.radio<each.x-each.radio&&each.x-this.x<this.radio+each.radio){
+                this.x-=Math.cos(Math.atan((each.y-this.y)/(each.x-this.x)))*this.radio;
+            }
+        }
+        */
         figura.beginPath();
         figura.arc(this.x,this.y,this.radio,0,Math.PI*2);
         if(this.valor<0){
@@ -64,9 +71,15 @@ function cambiodim(event){
     }
 
 }
+function click_switch(event){
+    if(switch_click=="borrar")
+        borrar(event);
+    else 
+        createCharge(event);
+}
 
-canvas.addEventListener("click", createCharge); 
-var allCargas = [];
+canvas.addEventListener("click", click_switch); 
+var allcargas = [];
 
 function createCharge(event) {   
     let rect = canvas.getBoundingClientRect();
@@ -88,9 +101,15 @@ function createCharge(event) {
     let newCharge = new carga(x, y, 25, coulomb);
     newCharge.draw();
     allcargas.push(newCharge);
+   
 }
 
-
+function borrar(event){
+     let recto = canvas.getBoundingClientRect();
+    let x_borrar = event.clientX - recto.left-30;
+    let y_borrar = event.clientY - recto.top-30;
+    figura.clearRect(x_borrar, y_borrar, 60, 60);
+}
 
 function limpiar(){
     figura.clearRect(0, 0, canvas.width, canvas.height);
@@ -105,4 +124,8 @@ function notificacion(texto){
     noti.classList.add("noti");
     noti.innerHTML=texto;
     document.getElementById("notificacion").appendChild(noti);
+
+    setTimeout(() => {
+        noti.remove();
+    }, 3000);
 }
