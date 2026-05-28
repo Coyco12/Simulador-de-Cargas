@@ -11,6 +11,10 @@ canvas{
 }
 body{
     background-color: #5c6570;
+    -webkit-user-select: none; 
+    -moz-user-select: none;    
+    -ms-user-select: none;     
+    user-select: none; 
 }
 label{
     font-family: 'Elms Sans';

@@ -94,6 +94,7 @@ class carga{
 function cambiodim(event){
     if(dim.value=="1D"||dim.value=="2D"||dim.value=="general"){
         limpiar();
+        button_borrar.classList.remove("borrando");
         switch_click = "crear"; 
     }
 
@@ -126,30 +127,27 @@ function measureCharge(event){
     if(closestcharge==null){
         return false;
     }else{
+        let fuerza=0;
+        let fuerzax=0;
+        let fuerzay=0;
         for (let i = 0; i < allcargas.length; i++) {
             if(allcargas[i]!=closestcharge){
                 let cargaActual = allcargas[i];
                 let distancia = calcDistancia(cargaActual.x,cargaActual.y,x_clic,y_clic);
-                let fuerza= (9*Math.pow(10,9)*cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
-                figura.beginPath();
-                figura.moveTo(closestcharge.x, closestcharge.y);
-                figura.lineTo(cargaActual.x, cargaActual.y);
-                figura.strokeStyle="blue";
-                figura.lineWidth=2;
-                figura.stroke();
-                figura.save();
-                figura.translate((closestcharge.x+cargaActual.x)/2, (closestcharge.y+cargaActual.y)/2);
-                let angle = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x);
-                figura.rotate(angle);
-                figura.font="20px Arial";
-                figura.fillStyle="white";
-                figura.textAlign="center";
-                figura.textBaseline="middle";
-                figura.fillText(fuerza.toExponential(2)+" N", (closestcharge.x+cargaActual.x)/2, (closestcharge.y+cargaActual.y)/2);
-                figura.restore();
-                figura.closePath();
+                let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x);
+                fuerza += (9*Math.pow(10,9)*cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
+                fuerzax += fuerza * Math.cos(angulo);
+                fuerzay += fuerza * Math.sin(angulo);
             }
         }
+        figura.beginPath();
+        figura.moveTo(closestcharge.x, closestcharge.y);
+        figura.lineTo(closestcharge.x+fuerzax/1000, closestcharge.y+fuerzay/1000);
+        figura.strokeStyle="green";
+        figura.lineWidth=2;
+        figura.linecap="round";
+        figura.stroke();
+        figura.closePath();
         return true;
     }
 }
