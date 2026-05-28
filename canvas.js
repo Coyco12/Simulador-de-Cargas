@@ -7,6 +7,8 @@ var allcargas = [];
 let button_borrar = document.getElementById("borrar");
 button_borrar.classList.remove("borrando");
 let prefix = document.getElementById("prefix");
+let canvasdata=null;
+
 function inicializarYReseize() {
     
     cuadro1 = document.getElementById("valorcarga");
@@ -127,25 +129,51 @@ function measureCharge(event){
     if(closestcharge==null){
         return false;
     }else{
+        if(canvasdata!=null){
+            figura.putImageData(canvasdata, 0, 0);
+        }
         let fuerza=0;
         let fuerzax=0;
         let fuerzay=0;
         for (let i = 0; i < allcargas.length; i++) {
             if(allcargas[i]!=closestcharge){
                 let cargaActual = allcargas[i];
-                let distancia = calcDistancia(cargaActual.x,cargaActual.y,x_clic,y_clic);
-                let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x);
+                let distancia = calcDistancia(cargaActual.x,cargaActual.y,closestcharge.x,closestcharge.y);
+                let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x)+180*Math.PI/180;
                 fuerza += (9*Math.pow(10,9)*cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
                 fuerzax += fuerza * Math.cos(angulo);
                 fuerzay += fuerza * Math.sin(angulo);
             }
         }
+        canvasdata = figura.getImageData(0, 0, canvas.width, canvas.height);
         figura.beginPath();
         figura.moveTo(closestcharge.x, closestcharge.y);
-        figura.lineTo(closestcharge.x+fuerzax/1000, closestcharge.y+fuerzay/1000);
-        figura.strokeStyle="green";
-        figura.lineWidth=2;
         figura.linecap="round";
+        if(Math.abs(fuerzax)/10000>closestcharge.radio&&Math.abs(fuerzay)/10000>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/10000, closestcharge.y+fuerzay/10000);
+            figura.strokeStyle="#fa4646";
+            figura.lineWidth=6;
+        }else if(Math.abs(fuerzax)/1000>closestcharge.radio&&Math.abs(fuerzay)/1000>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/1000, closestcharge.y+fuerzay/1000);
+            figura.strokeStyle="#fae246";
+            figura.lineWidth=5;
+        }else if(Math.abs(fuerzax)/100>closestcharge.radio&&Math.abs(fuerzay)/100>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/100, closestcharge.y+fuerzay/100);
+            figura.strokeStyle="#4cfa46";
+            figura.lineWidth=4;
+        }else if(Math.abs(fuerzax)/10>closestcharge.radio&&Math.abs(fuerzay)/10>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/10, closestcharge.y+fuerzay/10);
+            figura.strokeStyle="#46fae2";
+            figura.lineWidth=3;
+        }else if(Math.abs(fuerzax)>closestcharge.radio&&Math.abs(fuerzay)>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax, closestcharge.y+fuerzay);
+            figura.strokeStyle="#4646fa";
+            figura.lineWidth=2;
+        }else{
+            figura.lineTo(closestcharge.x+fuerzax*10, closestcharge.y+fuerzay*10);
+            figura.strokeStyle="#7a28ff";
+            figura.lineWidth=1;
+        }
         figura.stroke();
         figura.closePath();
         return true;
@@ -164,7 +192,9 @@ function createCharge(event) {
         notificacion(dimension0);
         return;
     }
-    if(!measureCharge(event)){    
+    if(!measureCharge(event)){
+        if(canvasdata!=null) figura.putImageData(canvasdata, 0, 0);
+        canvasdata=null;    
         let coulomb=Number(cuadro1.value);
         let prefixValue = prefix.value;
         if (prefixValue === "milicoulomb") {
@@ -185,6 +215,8 @@ function createCharge(event) {
     }
 }
 function borrar(event){
+    if(canvasdata!=null) figura.putImageData(canvasdata, 0, 0);
+    canvasdata=null;
     let rect = canvas.getBoundingClientRect();
     let x_clic = event.clientX - rect.left;
     let y_clic = event.clientY - rect.top;
@@ -235,7 +267,7 @@ function inicializarYReseize() {
     dim = document.getElementById("dimension");
     canvas = document.getElementById("canvas");
     container = canvas.parentNode;
-    figura = canvas.getContext("2d");
+    figura = canvas.getContext("2d",{willReadFrequently: true});
 
     if (canvas && dim) {
         let rect = canvas.getBoundingClientRect();
