@@ -140,7 +140,7 @@ function measureCharge(event){
                 let cargaActual = allcargas[i];
                 let distancia = calcDistancia(cargaActual.x,cargaActual.y,closestcharge.x,closestcharge.y);
                 let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x)+180*Math.PI/180;
-                fuerza += (9*Math.pow(10,9)*cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
+                fuerza += (9*Math.pow(10,9)*Math.abs(cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
                 fuerzax += fuerza * Math.cos(angulo);
                 fuerzay += fuerza * Math.sin(angulo);
             }
@@ -149,28 +149,28 @@ function measureCharge(event){
         figura.beginPath();
         figura.moveTo(closestcharge.x, closestcharge.y);
         figura.linecap="round";
-        if(Math.abs(fuerzax)/10000>closestcharge.radio&&Math.abs(fuerzay)/10000>closestcharge.radio){
-            figura.lineTo(closestcharge.x+fuerzax/10000, closestcharge.y+fuerzay/10000);
+        if(Math.abs(fuerzax)/1e+8>closestcharge.radio&&Math.abs(fuerzay)/1e+8>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/1e+8, closestcharge.y+fuerzay/1e+8);
             figura.strokeStyle="#fa4646";
             figura.lineWidth=6;
-        }else if(Math.abs(fuerzax)/1000>closestcharge.radio&&Math.abs(fuerzay)/1000>closestcharge.radio){
-            figura.lineTo(closestcharge.x+fuerzax/1000, closestcharge.y+fuerzay/1000);
+        }else if(Math.abs(fuerzax)/1e+4>closestcharge.radio&&Math.abs(fuerzay)/1e+4>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/1e+4, closestcharge.y+fuerzay/1e+4);
             figura.strokeStyle="#fae246";
             figura.lineWidth=5;
-        }else if(Math.abs(fuerzax)/100>closestcharge.radio&&Math.abs(fuerzay)/100>closestcharge.radio){
-            figura.lineTo(closestcharge.x+fuerzax/100, closestcharge.y+fuerzay/100);
-            figura.strokeStyle="#4cfa46";
-            figura.lineWidth=4;
-        }else if(Math.abs(fuerzax)/10>closestcharge.radio&&Math.abs(fuerzay)/10>closestcharge.radio){
-            figura.lineTo(closestcharge.x+fuerzax/10, closestcharge.y+fuerzay/10);
-            figura.strokeStyle="#46fae2";
-            figura.lineWidth=3;
         }else if(Math.abs(fuerzax)>closestcharge.radio&&Math.abs(fuerzay)>closestcharge.radio){
             figura.lineTo(closestcharge.x+fuerzax, closestcharge.y+fuerzay);
+            figura.strokeStyle="#4cfa46";
+            figura.lineWidth=4;
+        }else if(Math.abs(fuerzax)/1e-4>closestcharge.radio&&Math.abs(fuerzay)/1e-4>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/1e-4, closestcharge.y+fuerzay/1e-4);
+            figura.strokeStyle="#46fae2";
+            figura.lineWidth=3;
+        }else if(Math.abs(fuerzax)/1e-8>closestcharge.radio&&Math.abs(fuerzay)/1e-8>closestcharge.radio){
+            figura.lineTo(closestcharge.x+fuerzax/1e-8, closestcharge.y+fuerzay/1e-8);
             figura.strokeStyle="#4646fa";
             figura.lineWidth=2;
         }else{
-            figura.lineTo(closestcharge.x+fuerzax*10, closestcharge.y+fuerzay*10);
+            figura.lineTo(closestcharge.x+fuerzax/1e-12, closestcharge.y+fuerzay/1e-12);
             figura.strokeStyle="#7a28ff";
             figura.lineWidth=1;
         }
@@ -238,6 +238,7 @@ function borrar(event){
 function limpiar(){
     figura.clearRect(0, 0, canvas.width, canvas.height);
     allcargas = [];
+    canvasdata=null;
 }
 
 function notificacion(texto){
