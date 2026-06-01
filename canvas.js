@@ -6,13 +6,13 @@ let switch_click = "crear";
 var allcargas = [];
 let canvasdata = null;
 
-// Elementos de la interfaz global
 let button_borrar = document.getElementById("borrar");
 let button_campo = document.getElementById("modoCampo");
+let button_fuerza = document.getElementById("modoFuerza");
 let prefix = document.getElementById("prefix");
 
 let panelResultados, resEx, resEy, resEtotal;
-let panelFuerza, resFx, resFy, resFtotal;
+let panelFuerza, resFx, resFy, resFtotal, resDist;
 
 function calcDistancia(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -68,6 +68,8 @@ function click_switch(event) {
         borrar(event);
     } else if (button_campo.classList.contains("midiendo-campo")) {
         calcularCampoPorClic(event);
+    } else if (button_fuerza.classList.contains("analizando-fuerza")) {
+        measureCharge(event);
     } else {
         createCharge(event);
     }
@@ -91,7 +93,9 @@ function measureCharge(event){
         }
     }
 
+
     if (closestcharge == null) {
+        notificacion("Haz clic directamente sobre una carga para calcular la fuerza neta.");
         return false;
     } else {
         if (canvasdata != null) {
@@ -102,11 +106,14 @@ function measureCharge(event){
         let fuerza = 0;
         let fuerzax = 0;
         let fuerzay = 0;
+        let ultimaDistanciaRegistrada = 0; 
 
         for (let i = 0; i < allcargas.length; i++) {
             if (allcargas[i] != closestcharge) {
                 let cargaActual = allcargas[i];
                 let distancia = calcDistancia(cargaActual.x, cargaActual.y, closestcharge.x, closestcharge.y);
+                ultimaDistanciaRegistrada = distancia;
+
                 let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x);
                 
                 if (cargaActual.valor * closestcharge.valor > 0) {
@@ -115,6 +122,27 @@ function measureCharge(event){
                 fuerza = 9 * Math.pow(10, 9) * Math.abs(cargaActual.valor * closestcharge.valor) / Math.pow(distancia, 2);
                 fuerzax += fuerza * Math.cos(angulo);
                 fuerzay += fuerza * Math.sin(angulo);
+
+                figura.save(); 
+                figura.beginPath();
+                figura.setLineDash([6, 6]); 
+                figura.moveTo(closestcharge.x, closestcharge.y);
+                figura.lineTo(cargaActual.x, cargaActual.y);
+                figura.strokeStyle = "rgba(255, 255, 255, 0.45)"; 
+                figura.lineWidth = 1.5;
+                figura.stroke();
+                figura.closePath();
+
+                let medioX = (closestcharge.x + cargaActual.x) / 2;
+                let medioY = (closestcharge.y + cargaActual.y) / 2;
+                figura.font = "bold 13px 'Elms Sans', Arial";
+                figura.fillStyle = "#fff";
+                figura.textAlign = "center";
+                figura.textBaseline = "bottom";
+                figura.shadowColor = "black";
+                figura.shadowBlur = 4;
+                figura.fillText(distancia.toFixed(1) + " px", medioX, medioY - 4);
+                figura.restore(); 
             }
         }
 
@@ -172,6 +200,7 @@ function measureCharge(event){
         resFx.innerHTML = fuerzax.toExponential(4);
         resFy.innerHTML = fuerzay.toExponential(4);
         resFtotal.innerHTML = fuerzaTotal.toExponential(4);
+        if (resDist) resDist.innerHTML = ultimaDistanciaRegistrada.toFixed(2); 
 
         if (panelFuerza) {
             panelFuerza.classList.remove("panel-resultados-oculto");
@@ -196,29 +225,36 @@ function createCharge(event) {
         return;
     }
 
-    if (!measureCharge(event)) {
-        if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
-        canvasdata = null;    
-        let coulomb = Number(cuadro1.value);
-
-        if (coulomb == 0) {
-            notificacion(carga0);
-            return;
-        }  
-
-        let prefixValue = prefix.value;
-        if (prefixValue === "milicoulomb") {
-            coulomb *= 1e-3;
-        } else if (prefixValue === "microcoulomb") {
-            coulomb *= 1e-6;
-        } else if (prefixValue === "nanocoulomb") {
-            coulomb *= 1e-9;
+    for (let i = 0; i < allcargas.length; i++) {
+        let cargaExistente = allcargas[i];
+        let distanciaAlClic = calcDistancia(cargaExistente.x, cargaExistente.y, x, y);
+        if (distanciaAlClic < (cargaExistente.radio * 2)) {
+            notificacion("No se pueden colocar dos cargas en la misma posición.");
+            return; 
         }
-
-        let newCharge = new carga(x, y, 25, coulomb);
-        allcargas.push(newCharge);
-        newCharge.draw();
     }
+
+    if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+    canvasdata = null;    
+    let coulomb = Number(cuadro1.value);
+
+    if (coulomb == 0) {
+        notificacion(carga0);
+        return;
+    }  
+
+    let prefixValue = prefix.value;
+    if (prefixValue === "milicoulomb") {
+        coulomb *= 1e-3;
+    } else if (prefixValue === "microcoulomb") {
+        coulomb *= 1e-6;
+    } else if (prefixValue === "nanocoulomb") {
+        coulomb *= 1e-9;
+    }
+
+    let newCharge = new carga(x, y, 25, coulomb);
+    allcargas.push(newCharge);
+    newCharge.draw();
 }
 
 function borrar(event) {
@@ -277,6 +313,19 @@ function calcularCampoPorClic(event) {
 
     if (dim.value == "1D") {
         y_clic = canvas.height / 2;
+    }
+
+    for (let i = 0; i < allcargas.length; i++) {
+        let cargaExistente = allcargas[i];
+        let distanciaAlClic = calcDistancia(cargaExistente.x, cargaExistente.y, x_clic, y_clic);
+        
+        if (distanciaAlClic <= cargaExistente.radio) {
+            notificacion("No se puede calcular el campo eléctrico sobre la posición de una carga.");
+            
+            if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+            ocultarResultados();
+            return; 
+        }
     }
 
     if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
@@ -378,9 +427,11 @@ function inicializarYReseize() {
     resFx = document.getElementById("resFx");
     resFy = document.getElementById("resFy");
     resFtotal = document.getElementById("resFtotal");
+    resDist = document.getElementById("resDist");
+
+    button_fuerza = document.getElementById("modoFuerza");
 
     if (canvas && dim && container) {
-        // 🧠 TRUCO DE INYECCIÓN DE TAMAÑO DIRECTO: Evita el colapso del layout Flex
         canvas.width = container.clientWidth - 20;
         canvas.height = container.clientHeight - 20;
         canvasdata = null; 
@@ -393,12 +444,14 @@ function inicializarYReseize() {
 
         button_borrar.onclick = function() {
             button_campo.classList.remove("midiendo-campo");
+            button_fuerza.classList.remove("analizando-fuerza");
             button_borrar.classList.toggle("borrando");
             ocultarResultados();
         };
 
         button_campo.onclick = function() {
             button_borrar.classList.remove("borrando");
+            button_fuerza.classList.remove("analizando-fuerza");
             button_campo.classList.toggle("midiendo-campo");
             if (!button_campo.classList.contains("midiendo-campo")) {
                 ocultarResultados();
@@ -406,6 +459,16 @@ function inicializarYReseize() {
             }
         };
 
+        button_fuerza.onclick = function() {
+            button_borrar.classList.remove("borrando");
+            button_campo.classList.remove("midiendo-campo");
+            button_fuerza.classList.toggle("analizando-fuerza");
+            if (!button_fuerza.classList.contains("analizando-fuerza")) {
+                ocultarResultados();
+                if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+            }
+        };
+        
         if (allcargas.length > 0) {
             for (let i = 0; i < allcargas.length; i++) {
                 allcargas[i].draw();

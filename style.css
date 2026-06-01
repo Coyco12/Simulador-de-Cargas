@@ -198,6 +198,10 @@ button.midiendo-campo {
     background-color: rgb(162, 64, 186);
     color: white;
 }
+button.analizando-fuerza {
+    background-color: rgb(70, 200, 220);
+    color: white;
+}
 #panelResultados {
     margin-top: 15px;
     padding: 10px;
