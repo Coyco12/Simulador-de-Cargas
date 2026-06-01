@@ -82,8 +82,9 @@ button:active{
     transition: background-color 0.1s ease, transform 0.1s ease;
 }
 
-button.eliminar{
-       
+button.borrando {
+    background-color: rgb(255, 45, 45);
+    color: white;
 }
 
 .content{
@@ -108,15 +109,16 @@ button.eliminar{
     flex-grow: 0;
     padding: 10px;
 }
+
 .input-container{
     padding: 20px;
-    font: 'Elms Sans';
+    font-family: 'Elms Sans';
     color: white;
     background-color: rgb(70, 72, 76);
     border: 1px solid black;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-evenly; 
     align-items: center;
     height: 90%;
     flex-grow: 1;
@@ -125,21 +127,23 @@ button.eliminar{
 
 #notificacion{
     position: fixed;
-    right: 7px;
-    bottom: 10px;
+    right: 20px;          
+    top: 20px;            
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column; 
     align-items: flex-end;
     overflow: hidden;
-    padding: 20px;
+    padding: 10px;
+    z-index: 9999;        
+    pointer-events: none;
 }
 .noti{
     min-width: 100px;
     max-width: 200px;
-    background-color: #fff;
-    font-weight: 500;
+    background-color: #ff4d4d; 
+    font-weight: bold;
     font-family: 'Elms Sans';
-    color: black;
+    color: white; 
     margin: 15px 20px;
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -149,7 +153,7 @@ button.eliminar{
     position: relative;
     align-self: flex-end;
     flex-grow: 0;
-    flex-shrink:1;
+    flex-shrink: 1;
     font-size: clamp(0.8rem, 1vw, 1.2rem);
     padding: 10px 10px;
     animation: fade 3s ease forwards;
@@ -189,4 +193,74 @@ button{
     font-family: 'Elms Sans';
     font-weight: bold;
     height: 40px;
+}
+button.midiendo-campo {
+    background-color: rgb(162, 64, 186);
+    color: white;
+}
+#panelResultados {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 100%;
+    font-family: 'Elms Sans';
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.panel-resultados-visible {
+    display: block;
+}
+.panel-resultados-oculto {
+    display: none;
+}
+#panelResultados h3 {
+    margin: 0px 0px 5px 0px;
+    color: #b669c9;
+    text-align: center;
+    font-family: 'Elms Sans';
+    font-weight: bold;
+}
+#panelResultados p {
+    margin: 3px 0px;
+    color: white;
+}
+#panelResultados p.resultado-total {
+    font-weight: bold;
+    color: #46fae2;
+    margin-top: 5px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    padding-top: 5px;
+}
+
+#panelFuerza {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 100%;
+    font-family: 'Elms Sans';
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#panelFuerza h3 {
+    margin: 0px 0px 5px 0px;
+    color: #46fae2; 
+    text-align: center;
+    font-family: 'Elms Sans';
+    font-weight: bold;
+}
+
+#panelFuerza p {
+    margin: 3px 0px;
+    color: white;
+}
+
+#panelFuerza p.resultado-total-fuerza {
+    font-weight: bold;
+    color: #4cfa46; 
+    margin-top: 5px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    padding-top: 5px;
 }
