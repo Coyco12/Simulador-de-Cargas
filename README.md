@@ -1,9 +1,9 @@
-#Simulador de Cargas Eléctricas, Fuerza y Campo Eléctricos
+# Simulador de Cargas Eléctricas, Fuerza y Campo Eléctricos
 
-##Integrantes:
+## Integrantes:
 
-*Gutierrez Soto Alan Alberto
-*Favila Arellano Jacqueline Yuliana
-*Rodríguez Yañez Santiago Gabriel 
+* Gutierrez Soto Alan Alberto
+* Favila Arellano Jacqueline Yuliana
+* Rodríguez Yañez Santiago Gabriel 
 
 
