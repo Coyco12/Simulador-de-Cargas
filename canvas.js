@@ -468,6 +468,8 @@ function inicializarYReseize() {
                 if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
             }
         };
+
+        
         
         if (allcargas.length > 0) {
             for (let i = 0; i < allcargas.length; i++) {

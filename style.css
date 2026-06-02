@@ -97,7 +97,7 @@ button.borrando {
     width: 100vw;
     height: 100vh;
     margin: 0px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 .canvas-container{
     border:1px solid black;
