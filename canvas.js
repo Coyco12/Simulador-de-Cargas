@@ -306,7 +306,7 @@ function measureCharge(event){
                 let cargaActual = allcargas[i];
                 let distancia = calcDistancia(cargaActual.x,cargaActual.y,closestcharge.x,closestcharge.y);
                 let angulo = Math.atan2(cargaActual.y - closestcharge.y, cargaActual.x - closestcharge.x)+180*Math.PI/180;
-                fuerza += (9*Math.pow(10,9)*Math.abs(cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2);
+                fuerza += (9*Math.pow(10,9)*Math.abs(cargaActual.valor*closestcharge.valor)/Math.pow(distancia,2));
                 fuerzax += fuerza * Math.cos(angulo);
                 fuerzay += fuerza * Math.sin(angulo);
             }
