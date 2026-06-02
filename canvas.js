@@ -13,6 +13,8 @@ let prefix = document.getElementById("prefix");
 
 let panelResultados, resEx, resEy, resEtotal;
 let panelFuerza, resFx, resFy, resFtotal, resDist;
+let contenedorfy= document.getElementById("contenedorfy");
+let contenedorey= document.getElementById("contenedorey");
 
 function calcDistancia(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -201,6 +203,14 @@ function measureCharge(event){
         resFy.innerHTML = fuerzay.toExponential(4);
         resFtotal.innerHTML = fuerzaTotal.toExponential(4);
         if (resDist) resDist.innerHTML = ultimaDistanciaRegistrada.toFixed(2); 
+        if(dim.value=="1D") 
+        {
+            contenedorfy.style.display = "none";
+        }
+        else 
+        {
+            contenedorfy.style.display = "block";
+        }
 
         if (panelFuerza) {
             panelFuerza.classList.remove("panel-resultados-oculto");
@@ -395,6 +405,15 @@ function calcularCampoPorClic(event) {
     resEx.innerHTML = Ex.toExponential(4);
     resEy.innerHTML = Ey.toExponential(4);
     resEtotal.innerHTML = campoTotal.toExponential(4);
+
+    if(dim.value=="1D")
+    {
+        contenedorey.style.display = "none";
+    }
+    else
+    {
+        contenedorey.style.display = "block";
+    }   
 
     panelResultados.classList.remove("panel-resultados-oculto");
     panelResultados.classList.add("panel-resultados-visible");
