@@ -4,6 +4,8 @@
 
 * Gutierrez Soto Alan Alberto
 * Favila Arellano Jacqueline Yuliana
-* Rodríguez Yañez Santiago Gabriel 
+* Rodríguez Yañez Santiago Gabriel
+## Descripción del simulador:
+>Holi crayoli
 
 
