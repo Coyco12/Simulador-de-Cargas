@@ -481,3 +481,4 @@ function inicializarYReseize() {
 
 window.addEventListener("DOMContentLoaded", inicializarYReseize);
 window.addEventListener("resize", inicializarYReseize);
+window.addEventListener("resize", inicializarYReseize);
