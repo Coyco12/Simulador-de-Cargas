@@ -364,6 +364,7 @@ function calcularCampoPorClic(event) {
     }
 
     if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+    canvasdata = figura.getImageData(0, 0, canvas.width, canvas.height);
 
     let Ex = 0;
     let Ey = 0;
@@ -383,9 +384,31 @@ function calcularCampoPorClic(event) {
 
         Ex += magnitudE * Math.cos(angulo);
         Ey += magnitudE * Math.sin(angulo);
+
+        figura.save(); 
+        figura.beginPath();
+        figura.setLineDash([6, 6]); 
+        figura.moveTo(x_clic, y_clic);
+        figura.lineTo(cargaActual.x, cargaActual.y);
+        figura.strokeStyle = "white"; 
+        figura.lineWidth = 2.5; 
+        figura.stroke();
+        figura.closePath();
+
+        let medioX = (x_clic + cargaActual.x) / 2;
+        let medioY = (y_clic + cargaActual.y) / 2;
+        figura.font = "bold 13px Arial"; 
+        figura.fillStyle = "#fff";
+        figura.textAlign = "center";
+        figura.textBaseline = "bottom";
+        figura.shadowColor = "black";
+        figura.shadowBlur = 4;
+        figura.fillText(distancia.toFixed(1) + " px", medioX, medioY - 4);
+        figura.restore();
     }
 
-    canvasdata = figura.getImageData(0, 0, canvas.width, canvas.height);
+
+    
     let campoTotal = Math.sqrt(Ex * Ex + Ey * Ey);
 
     if (campoTotal === 0) return;
