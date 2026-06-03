@@ -15,6 +15,9 @@ let panelResultados, resEx, resEy, resEtotal;
 let panelFuerza, resFx, resFy, resFtotal, resDist;
 let contenedorfy= document.getElementById("contenedorfy");
 let contenedorey= document.getElementById("contenedorey");
+document.getElementById("mensaje").style.display = "none";
+document.getElementById("mensaje3").style.display = "none";
+
 
 function calcDistancia(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -53,6 +56,24 @@ class carga {
         if (this.valor > 0) figura.fillText("+", this.x, this.y);
         figura.closePath();
     }
+}
+function ejes() {
+    figura.save();
+    figura. beginPath();
+    figura.strokeStyle = "rgba(41, 39, 39, 0.7)";
+    figura.lineWidth = 1.5;
+ 
+    let mitady = canvas.height / 2;
+    figura.moveTo(0, mitady);
+    figura.lineTo(canvas.width, mitady);
+
+    let mitadx = canvas.width / 2;
+    figura.moveTo(mitadx, 0);
+    figura.lineTo(mitadx, canvas.height);
+
+    figura.stroke();
+    figura.closePath();
+    figura.restore();
 }
 
 function cambiodim(event) {
@@ -130,8 +151,8 @@ function measureCharge(event){
                 figura.setLineDash([6, 6]); 
                 figura.moveTo(closestcharge.x, closestcharge.y);
                 figura.lineTo(cargaActual.x, cargaActual.y);
-                figura.strokeStyle = "rgba(255, 255, 255, 0.45)"; 
-                figura.lineWidth = 1.5;
+                figura.strokeStyle = "white"; 
+                figura.lineWidth = 2.5;
                 figura.stroke();
                 figura.closePath();
 
@@ -212,10 +233,11 @@ function measureCharge(event){
             contenedorfy.style.display = "block";
         }
 
-        if (panelFuerza) {
-            panelFuerza.classList.remove("panel-resultados-oculto");
-            panelFuerza.classList.add("panel-resultados-visible");
-        }
+        document.getElementById("mensaje").style.display = "none";
+        document.getElementById("mensaje2").style.display = "none";
+        document.getElementById("mensaje3").style.display = "none";
+        document.getElementById("panelResultados").style.display = "none";
+        document.getElementById("panelFuerza").style.display = "block";    
         closestcharge.draw();
 
         return true;
@@ -261,7 +283,7 @@ function createCharge(event) {
     } else if (prefixValue === "nanocoulomb") {
         coulomb *= 1e-9;
     }
-
+    
     let newCharge = new carga(x, y, 25, coulomb);
     allcargas.push(newCharge);
     newCharge.draw();
@@ -282,6 +304,7 @@ function borrar(event) {
         if (distancia <= cargaActual.radio) {
             allcargas.splice(i, 1); 
             figura.clearRect(0, 0, canvas.width, canvas.height);
+            ejes();
             for (let j = 0; j < allcargas.length; j++) {
                 allcargas[j].draw();
             }
@@ -295,6 +318,7 @@ function limpiar() {
     allcargas = [];
     canvasdata = null;
     ocultarResultados();
+    ejes();
 }
 
 function notificacion(texto) {
@@ -415,19 +439,28 @@ function calcularCampoPorClic(event) {
         contenedorey.style.display = "block";
     }   
 
-    panelResultados.classList.remove("panel-resultados-oculto");
-    panelResultados.classList.add("panel-resultados-visible");
+    document.getElementById("mensaje").style.display = "none";
+    document.getElementById("mensaje2").style.display = "none";
+    document.getElementById("mensaje3").style.display = "none";
+    document.getElementById("panelResultados").style.display = "block";
+    document.getElementById("panelFuerza").style.display = "none";
+    
 }
 
 function ocultarResultados() {
-    if (panelResultados) {
-        panelResultados.classList.remove("panel-resultados-visible");
-        panelResultados.classList.add("panel-resultados-oculto");
+    if(dim.value=="general")
+    {
+        document.getElementById("mensaje2").style.display = "block";
+        document.getElementById("mensaje").style.display = "none";
     }
-    if (panelFuerza) {
-        panelFuerza.classList.remove("panel-resultados-visible");
-        panelFuerza.classList.add("panel-resultados-oculto");
-    }
+    else {
+        document.getElementById("mensaje").style.display = "block";
+        document.getElementById("mensaje2").style.display = "none";
+        }
+   
+    document.getElementById("mensaje3").style.display = "none";
+    
+  
 }
 
 function inicializarYReseize() {
@@ -466,6 +499,11 @@ function inicializarYReseize() {
             button_fuerza.classList.remove("analizando-fuerza");
             button_borrar.classList.toggle("borrando");
             ocultarResultados();
+            panelFuerza.style.display = "none";
+            panelResultados.style.display = "none";
+            document.getElementById("mensaje").style.display = "none";
+            document.getElementById("mensaje3").style.display = "block";
+        
         };
 
         button_campo.onclick = function() {
@@ -474,7 +512,17 @@ function inicializarYReseize() {
             button_campo.classList.toggle("midiendo-campo");
             if (!button_campo.classList.contains("midiendo-campo")) {
                 ocultarResultados();
+                panelFuerza.style.display = "none";
+                panelResultados.style.display = "none";
                 if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+            }
+            else {
+                document.getElementById("mensaje3").style.display = "block";
+                document.getElementById("mensaje").style.display = "none";
+                document.getElementById("mensaje2").style.display = "none";
+                document.getElementById("panelResultados").style.display = "none";
+                document.getElementById("panelFuerza").style.display = "none";
+            
             }
         };
 
@@ -483,12 +531,23 @@ function inicializarYReseize() {
             button_campo.classList.remove("midiendo-campo");
             button_fuerza.classList.toggle("analizando-fuerza");
             if (!button_fuerza.classList.contains("analizando-fuerza")) {
+                
                 ocultarResultados();
+                panelFuerza.style.display = "none";
+                panelResultados.style.display = "none";
                 if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
+            
+            }
+            else {
+                document.getElementById("mensaje3").style.display = "block";
+                document.getElementById("mensaje").style.display = "none";
+                document.getElementById("mensaje2").style.display = "none";
+                document.getElementById("panelResultados").style.display = "none";
+                document.getElementById("panelFuerza").style.display = "none";
             }
         };
 
-        
+        ejes();
         
         if (allcargas.length > 0) {
             for (let i = 0; i < allcargas.length; i++) {

@@ -47,23 +47,38 @@
                 <div>
                     <button type="button" id="borrar">Borrar carga</button>
                 </div>  
-                
-                <div id="panelResultados" class="panel-resultados-oculto">
-                    <h3>Resultados de E:</h3>
-                    <p>Ex: <span id="resEx">0</span> N/C</p>
-                    <p id="contenedorey">Ey: <span id="resEy">0</span> N/C</p>
-                    <p class="resultado-total">E total: <span id="resEtotal">0</span> N/C</p>
-                </div>
+                    <div id="panelmedicion">   
+                        <div id="mensaje">
+                            <p>Coloca las cargas dando clic en el espacio a la derecha.</p>
+                            <p>Después haz clic en "Medir Campo Eléctrico" o "Analizar Fuerza Neta"</p>
+                        </div>   
+                        <div id="mensaje2">
+                            <p>Selecciona una dimensión para comenzar</p>   
 
-                <div id="panelFuerza" class="panel-resultados-oculto">
-                    <h3>Resultados de F:</h3>
-                    <p>Fx: <span id="resFx">0</span> N</p>
-                    <p id="contenedorfy">Fy: <span id="resFy">0</span> N</p>
-                    <p>Distancia interactiva: <span id="resDist">0</span> px</p>
-                    <p class="resultado-total-fuerza">F total: <span id="resFtotal">0</span> N</p>
-                </div>
+                        </div>
+                        <div id="mensaje3">
+                            <p>Selecciona la carga que deseas analizar</p>   
+
+                        </div>
+                            <div id="panelResultados" class="panel-resultados-oculto">
+                                <h3>Resultados de E:</h3>
+                                <p>Ex: <span id="resEx">0</span> N/C</p>
+                                <p id="contenedorey">Ey: <span id="resEy">0</span> N/C</p>
+                                <p class="resultado-total">E total: <span id="resEtotal">0</span> N/C</p>
+                            </div>
+
+                            <div id="panelFuerza" class="panel-resultados-oculto">
+                                <h3>Resultados de F:</h3>
+                                <p>Fx: <span id="resFx">0</span> N</p>
+                                <p id="contenedorfy">Fy: <span id="resFy">0</span> N</p>
+                                <p>Distancia interactiva: <span id="resDist">0</span> px</p>
+                                 <p class="resultado-total-fuerza">F total: <span id="resFtotal">0</span> N</p>
+                            </div>
+
+                    </div>
+                
             </div>      
         </div>
         <script src="canvas.js"></script> 
     </body>
-</html>
+</html> 
