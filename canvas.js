@@ -292,7 +292,7 @@ function createCharge(event) {
 function borrar(event) {
     if (canvasdata != null) figura.putImageData(canvasdata, 0, 0);
     canvasdata = null;
-    ocultarResultados();
+    
 
     let rect = canvas.getBoundingClientRect();
     let x_clic = event.clientX - rect.left;
@@ -317,7 +317,8 @@ function limpiar() {
     figura.clearRect(0, 0, canvas.width, canvas.height);
     allcargas = [];
     canvasdata = null;
-    ocultarResultados();
+    panelFuerza.style.display = "none";
+    panelResultados.style.display = "none";
     ejes();
 }
 
@@ -498,11 +499,17 @@ function inicializarYReseize() {
             button_campo.classList.remove("midiendo-campo");
             button_fuerza.classList.remove("analizando-fuerza");
             button_borrar.classList.toggle("borrando");
-            ocultarResultados();
+           
+            if(button_borrar.classList.contains("borrando")){
+                document.getElementById("mensaje").style.display = "none";
+                document.getElementById("mensaje3").style.display = "block";
+                }
+                else{
+                    ocultarResultados();
+                    }
             panelFuerza.style.display = "none";
             panelResultados.style.display = "none";
-            document.getElementById("mensaje").style.display = "none";
-            document.getElementById("mensaje3").style.display = "block";
+            
         
         };
 
